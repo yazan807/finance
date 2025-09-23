@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "16956242161",
+    "project_id": "micro-agency-473009-j7",
+    "storage_bucket": "micro-agency-473009-j7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16956242161:android:d645b3ad899403cc811150",
+        "android_client_info": {
+          "package_name": "com.example.maryam_zabad"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTmhuvROt39cKO4_wig4qpbV1uak-Sb6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
