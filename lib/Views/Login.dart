@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'MainScreen.dart';
 import 'SignUp.dart';
 
@@ -18,6 +20,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailCtrl     = TextEditingController();
   final _passwordCtrl  = TextEditingController();
   bool _obscurePass    = true;
+  bool _rememberMe     = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    if (isLoggedIn && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -153,14 +173,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 10),
 
-                // Forgot password
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text('?שכחת סיסמה',
-                        style: TextStyle(color: kBlue, fontSize: 13)),
-                  ),
+                // Remember Me & Forgot Password
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _rememberMe,
+                          onChanged: (val) {
+                            setState(() {
+                              _rememberMe = val ?? false;
+                            });
+                          },
+                          activeColor: kBlue,
+                        ),
+                        const Text('זכור אותי', style: TextStyle(fontSize: 13, color: Color(0xFF333333))),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text('?שכחת סיסמה',
+                          style: TextStyle(color: kBlue, fontSize: 13)),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
 
@@ -168,11 +204,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // TODO: Firebase Auth login
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => const HomeScreen()));
+                        if (_rememberMe) {
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setBool('isLoggedIn', true);
+                        }
+                        if (mounted) {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (_) => const HomeScreen()));
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(

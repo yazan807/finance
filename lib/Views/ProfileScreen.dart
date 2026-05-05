@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'EditProfileScreen.dart';
+import 'Login.dart';
 
 const Color kBlue = Colors.blue;
 const Color kBgBlue = Color(0xFFE3F2FD);
@@ -65,6 +67,25 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: const Text('ערוך פרופיל',
                         style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: TextButton(
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('isLoggedIn', false);
+                      if (context.mounted) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => const LoginScreen()),
+                          (route) => false,
+                        );
+                      }
+                    },
+                    child: const Text('התנתק',
+                        style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.w600)),
                   ),
                 ),
               ],
